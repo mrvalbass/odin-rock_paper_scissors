@@ -17,7 +17,7 @@ function getPlayerChoice (gamesLeft, gameData) {
     if (gamesLeft > 1) {
         return prompt(`Welcome to Odin Rock, Paper, Scissors game.\nIt is a BO5 game.\nThere are ${gamesLeft} games left to play.` + gameData + `\nChoose your weapon :`).toLowerCase()
     } else {
-        return prompt(`Welcome to Odin Rock, Paper, Scissors game.\nIt is a BO5 game.\nThere is ${gamesLeft} game left to play.` + gameData + `\nChoose your weapon :`).toLowerCase()
+        return prompt(`Welcome to Odin Rock, Paper, Scissors game.\nIt is a BO5 game against the computer.\nThere is ${gamesLeft} game left to play.` + gameData + `\nChoose your weapon :`).toLowerCase()
     }
 }
 
