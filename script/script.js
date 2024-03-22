@@ -1,13 +1,54 @@
 // Create a game of Rock, Paper, Scissors
 
+// DOM elements
+const playerControls = document.querySelector('.player-selection');
+
+const resultBox = document.querySelector('.result');
+const roundScore = resultBox.querySelector('.round-score');
+const gameScore = resultBox.querySelector('.game-score');
+const endBox = document.querySelector('.end')
+const gameResult = endBox.querySelector('.game-result');
+const retryInfo = endBox.querySelector('.retry-info');
+
+const audio = document.querySelector('audio');
+const musicControls = document.querySelector('.music-controls')
+const musicButtons = Array.from(musicControls.children)
+
+const computerControls = document.querySelector('.computer-selection');
+const computerButtons = Array.from(computerControls.children);
+
+// Set audio
+audio.volume = 0.1
+musicControls.addEventListener('click', () => {
+    if (!audio.paused) {
+        musicButtons[0].classList.add('hidden')
+        musicButtons[1].classList.remove('hidden')
+        audio.pause()
+    } else {
+        musicButtons[0].classList.remove('hidden')
+        musicButtons[1].classList.add('hidden')
+        audio.play()
+    }
+})
+
+//Game Data Initialization
+let roundsWon = 0;
+let roundsLost = 0;
+let gameEnded = false;
+
 // Capitalize a word
 function capitalize(word) {
     return word.at(0).toUpperCase() + word.slice(1).toLowerCase()
 }
 
-// Format the game data for better readability
-function formatGameData(gamesWon, gamesLost) {
-    return `Games won : ${gamesWon} | Games Lost : ${gamesLost}`
+// Reset internal data and displayed info for new game 
+function resetGame () {
+    roundsWon = 0;
+    roundsLost = 0;
+    gameEnded = false;
+    retryInfo.style.display = 'none';
+    gameResult.textContent = ''
+    endBox.style.visibility = 'hidden'
 }
 
 // Get the computer to choose randomly between rock, paper and scissors
@@ -22,73 +63,57 @@ function getComputerChoice() {
     }
 }
 
-// Get the user input
-function getPlayerChoice(gamesLeft, gameData) {
-    let playerSelection;
-    do {
-        playerSelection = prompt(
-`Welcome to Odin Rock, Paper, Scissors game.
-It is a BO5 game.
-There ${gamesLeft > 1 ? `are ${gamesLeft} games` : `is ${gamesLeft} game`} left to play. 
-${gameData}
-Choose your weapon :`
-        ).toLowerCase().trim();
-        if (playerSelection !== 'rock' && playerSelection !== 'paper' && playerSelection !== 'scissors') {
-            alert('Incorrect input! Choose from Rock, Paper of Scissors');
-        };
-    } while (playerSelection !== 'rock' && playerSelection !== 'paper' && playerSelection !== 'scissors');
-    return playerSelection;
-}
-
 // Define winning, tie and losing cases according to player input and computer random choice
 function playRound(playerSelection, computerSelection) {
-    if (
-        (playerSelection === 'rock' && computerSelection === 'scissors') ||
-        (playerSelection === 'paper' && computerSelection === 'rock') ||
-        (playerSelection === 'scissors' && computerSelection === 'paper')) {
-        return `You Won! ${capitalize(playerSelection)} beats ${computerSelection}` 
+    const roundWon = 
+        (playerSelection === 'rock' && computerSelection === 'scissors') 
+        || (playerSelection === 'paper' && computerSelection === 'rock')
+        || (playerSelection === 'scissors' && computerSelection === 'paper')
+
+    if (roundWon) {
+        roundsWon++;
+        return `You Won! ${capitalize(playerSelection)} beats ${computerSelection}`
     } else if (playerSelection === computerSelection) {
         return "It's a tie. Rematch!"
     } else {
+        roundsLost++;
         return `You Lost! ${capitalize(computerSelection)} beats ${playerSelection}`
     }
 }
 
-// Play a BO5 Rock, Paper, Scissors game
-function playGame() {
-    // Game data
-    let gamesWon = 0;
-    let gamesLost = 0;
+// Play a Rock, Paper, Scissors game
+function playGame(e, pointsToWin = 5) {
+    // Update internal data
+    if (gameEnded) resetGame()
+    const computerSelection = getComputerChoice()
+    let roundResult = playRound(e.target.dataset.value,computerSelection);
+    if (roundsWon === pointsToWin || roundsLost === pointsToWin) gameEnded = true
 
-    for (let i = 0; i < 5; i++) {
-        // Round data
-        const gamesLeft = 5 - i
-        let roundResult
-
-        //Rematch if the round is a tie
-        do {
-            let playerSelection = getPlayerChoice(gamesLeft, formatGameData(gamesWon, gamesLost))
-            roundResult = playRound(playerSelection,getComputerChoice());
-
-            if (roundResult.includes('Won')) {
-                gamesWon++;
-            } else if (roundResult.includes('Lost')){
-                gamesLost++;
-            };
-
-            alert(`${roundResult}\n${formatGameData(gamesWon, gamesLost)}`);
-        } while (roundResult.includes('tie'));
-
-        if (gamesWon === 3 || gamesLost === 3) {break};
-    };
-
-    if(gamesWon > gamesLost) {
-        alert('Congratulations, you beat the computer')
-    } else {
-        alert('Computer won. Better luck next time')
+    //Display info to player
+    computerButtons.forEach((button) => {
+        button
+        if (button.dataset.value !== computerSelection) {
+            button.style.display = 'none'
+        } else {
+            button.style.display = 'block'
+        }
+    })
+    roundScore.textContent = roundResult
+    gameScore.textContent = `Score : You ${roundsWon} | Computer ${roundsLost}`
+    if (gameEnded) {
+        gameResult.textContent = 
+            roundsWon === pointsToWin 
+            ? 'Congratulations, you beat the computer \r\n'
+            : 'Computer won. Better luck next time \r\n'
+        retryInfo.style.display = 'block'
+        endBox.style.visibility = 'visible'
     }
-};
+}
 
-// Launch the Game
-playGame()
-
+// Listen to player action to launch the Game
+playerControls.addEventListener('click', (e) => {
+    const targetTag = e.target.tagName;
+    if (targetTag === 'BUTTON' || targetTag === 'svg' || targetTag === 'path') {
+        playGame(e)
+    }    
+});
