@@ -18,7 +18,6 @@ const computerControls = document.querySelector('.computer-selection');
 const computerButtons = Array.from(computerControls.children);
 
 // Set audio
-audio.play()
 audio.volume = 0.1
 musicControls.addEventListener('click', () => {
     if (!audio.paused) {
@@ -50,6 +49,9 @@ function resetGame () {
     endBox.style.visibility = 'hidden'
     gameScore.textContent = 'Score : You 0 | Computer 0'
     roundScore.textContent = ''
+    computerButtons.forEach((button) => {
+        button.style.display = 'block'
+    })
 }
 
 // Get the computer to choose randomly between rock, paper and scissors
