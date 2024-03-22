@@ -10,7 +10,7 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 100vh;
+  height: 100svh;
   background-image: url(./images/bamboos.jpeg);
   background-size: cover;
 }
@@ -64,6 +64,10 @@ svg{
 }
 
 .end {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
   visibility: hidden;
   position: absolute;
   top: 50%;
@@ -73,8 +77,17 @@ svg{
     translateY(-50%);
   width: 75%;
 }
+
 .game-result {
   font-size: 3rem;
+}
+
+.retry {
+  background-color: transparent;
+  backdrop-filter: none;
+  border-color: white;
+  font-size: 2rem;
+  padding: 0.5rem;
 }
 
 footer {

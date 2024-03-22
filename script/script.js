@@ -8,7 +8,7 @@ const roundScore = resultBox.querySelector('.round-score');
 const gameScore = resultBox.querySelector('.game-score');
 const endBox = document.querySelector('.end')
 const gameResult = endBox.querySelector('.game-result');
-const retryInfo = endBox.querySelector('.retry-info');
+const retryButton = endBox.querySelector('.retry');
 
 const audio = document.querySelector('audio');
 const musicControls = document.querySelector('.music-controls')
@@ -18,6 +18,7 @@ const computerControls = document.querySelector('.computer-selection');
 const computerButtons = Array.from(computerControls.children);
 
 // Set audio
+audio.play()
 audio.volume = 0.1
 musicControls.addEventListener('click', () => {
     if (!audio.paused) {
@@ -46,9 +47,9 @@ function resetGame () {
     roundsWon = 0;
     roundsLost = 0;
     gameEnded = false;
-    retryInfo.style.display = 'none';
-    gameResult.textContent = ''
     endBox.style.visibility = 'hidden'
+    gameScore.textContent = 'Score : You 0 | Computer 0'
+    roundScore.textContent = ''
 }
 
 // Get the computer to choose randomly between rock, paper and scissors
@@ -84,14 +85,12 @@ function playRound(playerSelection, computerSelection) {
 // Play a Rock, Paper, Scissors game
 function playGame(e, pointsToWin = 5) {
     // Update internal data
-    if (gameEnded) resetGame()
     const computerSelection = getComputerChoice()
     let roundResult = playRound(e.target.dataset.value,computerSelection);
     if (roundsWon === pointsToWin || roundsLost === pointsToWin) gameEnded = true
 
     //Display info to player
     computerButtons.forEach((button) => {
-        button
         if (button.dataset.value !== computerSelection) {
             button.style.display = 'none'
         } else {
@@ -105,15 +104,19 @@ function playGame(e, pointsToWin = 5) {
             roundsWon === pointsToWin 
             ? 'Congratulations, you beat the computer \r\n'
             : 'Computer won. Better luck next time \r\n'
-        retryInfo.style.display = 'block'
         endBox.style.visibility = 'visible'
     }
 }
 
-// Listen to player action to launch the Game
+// Listen to player action to launch and play the Game
 playerControls.addEventListener('click', (e) => {
     const targetTag = e.target.tagName;
-    if (targetTag === 'BUTTON' || targetTag === 'svg' || targetTag === 'path') {
+    if (!gameEnded && (targetTag === 'BUTTON' || targetTag === 'svg' || targetTag === 'path')) {
         playGame(e)
     }    
 });
+
+// Reset game when retry button is clicked
+retryButton.addEventListener('click', () => {
+    resetGame()
+})
