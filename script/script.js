@@ -6,9 +6,14 @@ const playerControls = document.querySelector('.player-selection');
 const resultBox = document.querySelector('.result');
 const roundScore = resultBox.querySelector('.round-score');
 const gameScore = resultBox.querySelector('.game-score');
+
 const endBox = document.querySelector('.end')
 const gameResult = endBox.querySelector('.game-result');
 const retryButton = endBox.querySelector('.retry');
+
+const EEgg = document.querySelector('.e-egg')
+const buy = EEgg.querySelector('.buy')
+const tryToWin = EEgg.querySelector('.try')
 
 const audio = document.querySelector('audio');
 const musicControls = document.querySelector('.music-controls')
@@ -35,6 +40,7 @@ musicControls.addEventListener('click', () => {
 let roundsWon = 0;
 let roundsLost = 0;
 let gameEnded = false;
+let cheater = false;
 
 // Capitalize a word
 function capitalize(word) {
@@ -46,6 +52,7 @@ function resetGame () {
     roundsWon = 0;
     roundsLost = 0;
     gameEnded = false;
+    cheater = false;
     endBox.style.visibility = 'hidden'
     gameScore.textContent = 'Score : You 0 | Computer 0'
     roundScore.textContent = ''
@@ -84,6 +91,15 @@ function playRound(playerSelection, computerSelection) {
     }
 }
 
+// The Well easter egg
+function callEEgg() {
+    EEgg.style.visibility = 'visible'
+}
+
+function resumeGame() {
+    EEgg.style.visibility = 'hidden'
+}
+
 // Play a Rock, Paper, Scissors game
 function playGame(e, pointsToWin = 5) {
     // Update internal data
@@ -101,11 +117,14 @@ function playGame(e, pointsToWin = 5) {
     })
     roundScore.textContent = roundResult
     gameScore.textContent = `Score : You ${roundsWon} | Computer ${roundsLost}`
+    if (roundsWon < 4 && roundsLost === 4) callEEgg()
     if (gameEnded) {
         gameResult.textContent = 
             roundsWon === pointsToWin 
             ? 'Congratulations, you beat the computer \r\n'
-            : 'Computer won. Better luck next time \r\n'
+            : cheater === true 
+                ? 'You Lost, Respect yourself!'
+                : 'Computer won. Better luck next time \r\n'
         endBox.style.visibility = 'visible'
     }
 }
@@ -119,6 +138,14 @@ playerControls.addEventListener('click', (e) => {
 });
 
 // Reset game when retry button is clicked
-retryButton.addEventListener('click', () => {
-    resetGame()
+retryButton.addEventListener('click', resetGame)
+
+//Auto lose if tries to buy the well
+buy.addEventListener('click', (e) => {
+    cheater = true
+    playGame(e)
+    resumeGame()
 })
+
+//Resume if tries to win legally
+tryToWin.addEventListener('click', resumeGame)

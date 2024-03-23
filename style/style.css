@@ -17,9 +17,9 @@ body {
 
 .title {
   text-align: center;
+  padding: 1rem 0;  
   background-color: rgba(6, 29, 3, 0.75);
   backdrop-filter: blur(5px);
-  padding: 1rem 0;
 }
 
 .info {
@@ -27,10 +27,10 @@ body {
   margin: 0 auto;
   text-align: center;
   font-size: 1.2rem;
-  background-color: rgba(6, 29, 3, 0.75);
-  backdrop-filter: blur(5px);
   padding: 1rem;
   border-radius: 5px;
+  background-color: rgba(6, 29, 3, 0.75);
+  backdrop-filter: blur(5px);
 }
 
 .controls {
@@ -39,18 +39,23 @@ body {
   justify-content: center;
 }
 
-button {
+.control-button {
   width: 10rem;
   padding: 1rem;
   background-color: rgba(6, 29, 3, 0.75);
   backdrop-filter: blur(5px);
   border: 4px solid rgba(6, 29, 3);
-  border-radius: 5px;
+  border-radius: 5px; 
+}
+
+.player-button,
+.pop-up-button {
   cursor: pointer;
   transition: transform 0.1s ease-in-out;
 }
 
-.player-selection button:hover {
+.player-button:hover,
+.pop-up-button:hover {
   transform: scale(1.1);
 }
 
@@ -59,11 +64,7 @@ svg{
   fill: white;
 }
 
-.computer-selection button{
-  cursor: auto;
-}
-
-.end {
+.pop-up {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -75,19 +76,40 @@ svg{
   transform: 
     translateX(-50%) 
     translateY(-50%);
-  width: 75%;
+  max-width: 75%;
 }
 
 .game-result {
   font-size: 3rem;
 }
 
-.retry {
+.pop-up-button {
   background-color: transparent;
-  backdrop-filter: none;
-  border-color: white;
-  font-size: 2rem;
+  border: 4px white solid;
+  border-radius: 5px;
+  font-size: 1.4rem;
   padding: 0.5rem;
+}
+
+.well {
+  width: 10rem;
+  border: 4px solid white;
+  border-radius: 5px;
+}
+
+.e-egg svg,
+.music-controls svg {
+  fill: none;
+}
+
+.choice {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+}
+
+.try {
+  flex-grow: 1;
 }
 
 footer {
@@ -98,10 +120,6 @@ footer {
   width: 3rem;
   padding: 0;
   border: none;
-}
-
-.music-controls button svg {
-  fill: none;
 }
 
 .hidden{
