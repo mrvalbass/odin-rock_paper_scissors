@@ -41,6 +41,7 @@ let roundsWon = 0;
 let roundsLost = 0;
 let gameEnded = false;
 let cheater = false;
+let fair = false;
 
 // Capitalize a word
 function capitalize(word) {
@@ -53,6 +54,7 @@ function resetGame () {
     roundsLost = 0;
     gameEnded = false;
     cheater = false;
+    fair = false;
     endBox.style.visibility = 'hidden'
     gameScore.textContent = 'Score : You 0 | Computer 0'
     roundScore.textContent = ''
@@ -117,7 +119,7 @@ function playGame(e, pointsToWin = 5) {
     })
     roundScore.textContent = roundResult
     gameScore.textContent = `Score : You ${roundsWon} | Computer ${roundsLost}`
-    if (roundsWon < 4 && roundsLost === 4) callEEgg()
+    if (roundsWon < 4 && roundsLost === 4 && !fair) callEEgg()
     if (gameEnded) {
         gameResult.textContent = 
             roundsWon === pointsToWin 
@@ -148,4 +150,7 @@ buy.addEventListener('click', (e) => {
 })
 
 //Resume if tries to win legally
-tryToWin.addEventListener('click', resumeGame)
+tryToWin.addEventListener('click', () => {
+    fair = true
+    resumeGame()
+})

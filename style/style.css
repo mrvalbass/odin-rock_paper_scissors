@@ -104,12 +104,14 @@ svg{
 
 .choice {
   display: flex;
+  justify-content: center ;
   gap: 1rem;
   width: 100%;
 }
 
-.try {
-  flex-grow: 1;
+.try, 
+.buy {
+  width: 50%;
 }
 
 footer {
